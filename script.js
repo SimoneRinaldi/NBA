@@ -66,7 +66,7 @@ function fetchDataForDate() {
                 printGames();
             } else {
                 document.getElementById("Card").innerHTML = `
-                <div class="container h-100 d-flex justify-content-center align-items-center">
+                <div class="container h-100 d-flex justify-content-center align-items-center" style="color: white !important">
                     <div class="row">
                         <div class="col-12 text-center">
                             <h1 style="padding-top: 30%">NO GAME</h1>
@@ -85,6 +85,8 @@ function printGames() {
     let content = ''
     for (let i = 0; i < data.events.length; i++) {
         if (data.events[i].competitions[0].status.type.completed == true) {
+            let [winTeam1, lostTeam1] = data.events[i].competitions[0].competitors[0].records[0].summary.split('-').map(Number);
+            let [winTeam2, lostTeam2] = data.events[i].competitions[0].competitors[1].records[0].summary.split('-').map(Number);
             content += `
             <div class="card card_game text-center">
                 
@@ -95,6 +97,14 @@ function printGames() {
                                 <img src="${data.events[i].competitions[0].competitors[1].team.logo}" class="img-fluid">
                                 <h3>${data.events[i].competitions[0].competitors[1].team.abbreviation}</h3>
                                 <h4>${data.events[i].competitions[0].competitors[1].records[0].summary}</h4>
+                                <div class="progress-stacked">
+                                    <div class="progress" role="progressbar" aria-label="Win" aria-valuenow="${(winTeam2 / (winTeam2 + lostTeam2)) * 100}" aria-valuemin="0" aria-valuemax="100" style="width: ${(winTeam2 / (winTeam2 + lostTeam2)) * 100}%">
+                                        <div class="progress-bar" style="background-color: #${data.events[i].competitions[0].competitors[1].team.color}"></div>
+                                    </div>
+                                    <div class="progress" role="progressbar" aria-label="Lost" aria-valuenow="${(lostTeam2 / (winTeam2 + lostTeam2)) * 100}" aria-valuemin="0" aria-valuemax="100" style="width: ${(lostTeam2 / (winTeam2 + lostTeam2)) * 100}%">
+                                        <div class="progress-bar" style="background-color: #${data.events[i].competitions[0].competitors[1].team.alternateColor}"></div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col">
                                 <h1>${data.events[i].competitions[0].competitors[1].score}</h1>
@@ -109,6 +119,14 @@ function printGames() {
                                 <img src="${data.events[i].competitions[0].competitors[0].team.logo}" class="img-fluid">
                                 <h3>${data.events[i].competitions[0].competitors[0].team.abbreviation}</h3>
                                 <h4>${data.events[i].competitions[0].competitors[0].records[0].summary}</h4>
+                                <div class="progress-stacked">
+                                    <div class="progress" role="progressbar" aria-label="Win" aria-valuenow="${(winTeam1 / (winTeam1 + lostTeam1)) * 100}" aria-valuemin="0" aria-valuemax="100" style="width: ${(winTeam1 / (winTeam1 + lostTeam1)) * 100}%">
+                                        <div class="progress-bar" style="background-color: #${data.events[i].competitions[0].competitors[0].team.color}"></div>
+                                    </div>
+                                    <div class="progress" role="progressbar" aria-label="Lost" aria-valuenow="${(lostTeam1 / (winTeam1 + lostTeam1)) * 100}" aria-valuemin="0" aria-valuemax="100" style="width: ${(lostTeam1 / (winTeam1 + lostTeam1)) * 100}%">
+                                        <div class="progress-bar" style="background-color: #${data.events[i].competitions[0].competitors[0].team.alternateColor}"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -117,8 +135,8 @@ function printGames() {
                     <h5 class="card-text">${new Date(data.events[i].date).toLocaleString('en-US', { timeZone: 'Europe/Rome' })}</h5>
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item"><h5>${data.events[i].competitions[0].venue.fullName} - ${data.events[i].competitions[0].venue.address.city}</h5></li>
-                    <li class="list-group-item">
+                    <li class="list-group-item venue_li"><h5>${data.events[i].competitions[0].venue.fullName} - ${data.events[i].competitions[0].venue.address.city}</h5></li>
+                    <li class="list-group-item team_stats_li quarter_li">
 
                     <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMatch${i}" aria-expanded="false" aria-controls="collapseMatch${i}" onclick="ChangeCollapseButton('collapseButton1${i}')">
                         <h4>Points per Quarter</h4>
@@ -165,6 +183,7 @@ function printGames() {
             for (let j = 0; j < data.events[i].competitions[0].competitors[1].linescores.length; j++) {
                 content += `<div class="col"><h5>${data.events[i].competitions[0].competitors[1].linescores[j].value}</h5></div>`;
             }
+            console.log(data.events[i].competitions[0].competitors[0].team.color)
 
             content += `<div class="col"><h4>${data.events[i].competitions[0].competitors[1].score}</h4></div>
                                 </div>
@@ -172,8 +191,8 @@ function printGames() {
                             </div>  
                     </li >
 
-                    <li class="list-group-item">
-                        <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMatchTeam1${i}" aria-expanded="false" aria-controls="collapseMatchTeam1${i}" onclick="ChangeCollapseButton('collapseButtonTeam1${i}')">
+                    <li class="list-group-item team_stats_li" style="background-color: #${data.events[i].competitions[0].competitors[0].team.color}; color: #${data.events[i].competitions[0].competitors[0].team.alternateColor} !important">
+                        <button class="btn" style="background-color: #${data.events[i].competitions[0].competitors[0].team.color}; color: #${data.events[i].competitions[0].competitors[0].team.alternateColor} !important" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMatchTeam1${i}" aria-expanded="false" aria-controls="collapseMatchTeam1${i}" onclick="ChangeCollapseButton('collapseButtonTeam1${i}')">
                             <h4>${data.events[i].competitions[0].competitors[0].team.abbreviation} Stats</h4>
                                 <span id="collapseButtonTeam1${i}" class="collapseButton1_OFF">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
@@ -287,7 +306,7 @@ function printGames() {
                                 </div>
                                 <div class="row">
                                     <div class="col">
-                                        <div class="card">
+                                        <div class="card player_card_full">
                                             <img src="${(playerStats1.get("Pts")).athlete.headshot}" class="card-img-top">
                                             <div class="card-body card_player text-center">
                                                 <h3 class="card-title player_name">${(playerStats1.get("Pts")).athlete.displayName}</h3>
@@ -296,7 +315,7 @@ function printGames() {
                                         </div>
                                     </div>
                                     <div class="col">
-                                        <div class="card">
+                                        <div class="card player_card_full" >
                                             <img src="${(playerStats1.get("Reb")).athlete.headshot}" class="card-img-top">
                                             <div class="card-body card_player text-center">
                                                 <h3 class="card-title player_name">${(playerStats1.get("Reb")).athlete.displayName}</h3>
@@ -305,7 +324,7 @@ function printGames() {
                                         </div>
                                     </div>
                                     <div class="col">
-                                        <div class="card">
+                                        <div class="card  player_card_full" >
                                             <img src="${(playerStats1.get("Ast")).athlete.headshot}" class="card-img-top">
                                             <div class="card-body card_player text-center">
                                                 <h3 class="card-title player_name">${(playerStats1.get("Ast")).athlete.displayName}</h3>
@@ -330,8 +349,8 @@ function printGames() {
                         </div>
                     </li >
 
-                    <li class="list-group-item">
-                        <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMatchTeam2${i}" aria-expanded="false" aria-controls="collapseMatchTeam2${i}" onclick="ChangeCollapseButton('collapseButtonTeam2${i}')">
+                    <li class="list-group-item team_stats_li" style="background-color: #${data.events[i].competitions[0].competitors[1].team.color}; color: #${data.events[i].competitions[0].competitors[1].team.alternateColor} !important">
+                        <button class="btn" style="background-color: #${data.events[i].competitions[0].competitors[1].team.color}; color: #${data.events[i].competitions[0].competitors[1].team.alternateColor} !important" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMatchTeam2${i}" aria-expanded="false" aria-controls="collapseMatchTeam2${i}" onclick="ChangeCollapseButton('collapseButtonTeam2${i}')">
                             <h4>${data.events[i].competitions[0].competitors[1].team.abbreviation} Stats</h4>
                                 <span id="collapseButtonTeam2${i}" class="collapseButton1_OFF">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
@@ -446,7 +465,7 @@ function printGames() {
                                 </div>
                                 <div class="row">
                                     <div class="col">
-                                        <div class="card">
+                                        <div class="card player_card_full" >
                                             <img src="${(playerStats2.get("Pts")).athlete.headshot}" class="card-img-top">
                                             <div class="card-body card_player text-center">
                                                 <h3 class="card-title player_name">${(playerStats2.get("Pts")).athlete.displayName}</h3>
@@ -455,7 +474,7 @@ function printGames() {
                                         </div>
                                     </div>
                                     <div class="col">
-                                        <div class="card">
+                                        <div class="card player_card_full" >
                                             <img src="${(playerStats2.get("Reb")).athlete.headshot}" class="card-img-top">
                                             <div class="card-body card_player text-center">
                                                 <h3 class="card-title player_name">${(playerStats2.get("Reb")).athlete.displayName}</h3>
@@ -464,7 +483,7 @@ function printGames() {
                                         </div>
                                     </div>
                                     <div class="col">
-                                        <div class="card">
+                                        <div class="card player_card_full" >
                                             <img src="${(playerStats2.get("Ast")).athlete.headshot}" class="card-img-top">
                                             <div class="card-body card_player text-center">
                                                 <h3 class="card-title player_name">${(playerStats2.get("Ast")).athlete.displayName}</h3>
