@@ -1,0 +1,52 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #007bff;
+  color: white;
+  text-align: center;
+  padding: 10px;
+}
+
+#Calendar {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 30px;
+  padding-left: 10%;
+  padding-right: 10%;
+}
+
+.card_game {
+  width: 80%;
+  padding: 10px;
+  margin: 20px auto;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.PlayersStats{
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.card_player{
+    margin: 20px;
+    height: 100% !important;
+    padding: 10px;
+}
+
+.player_name{
+    padding: 10px;
+    min-height: 125px;
+}
+
+.player_stats{
+  margin-top: 15px;
+  font-weight: bolder;
+}
